@@ -3,60 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Play Game - ReallyUnb0ck3d</title>
+<title>Game Viewer - ReallyUnb0ck3d</title>
 <style>
-    body { margin:0; background:#111; color:white; font-family:Arial,sans-serif; }
-    .top-bar {
-        display:flex; justify-content:flex-end; background:#4b2e83; padding:10px; gap:10px;
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: Arial, sans-serif;
+        background: #1e1e2f;
+        color: white;
     }
-    .top-bar button {
-        background:#2e2e4f; border:none; color:white; padding:8px 12px; cursor:pointer; border-radius:5px;
-        transition:0.2s;
+
+    /* Top bar */
+    #topBar {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 10px;
+        background: #2e2e4f;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        z-index: 1000;
     }
-    .top-bar button:hover { background:#ffcc00; color:#000; }
-    iframe { width:100%; height:calc(100vh - 50px); border:none; display:block; }
+
+    #topBar button, #topBar select {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background: #4b2e83;
+        color: white;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    #topBar button:hover, #topBar select:hover {
+        background: #ffcc00;
+        color: #000;
+    }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        margin-top: 50px; /* leave space for top bar */
+    }
+
+    /* Overlay */
+    #overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(75,0,130,0.95); /* purple */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: white;
+        font-size: 1.5rem;
+        z-index: 2000;
+        display: none; /* hidden by default */
+        text-align: center;
+    }
+
+    #overlay span {
+        margin-top: 20px;
+        font-size: 1rem;
+        color: #ffcc00;
+    }
+
+    /* Loading spinner */
+    .spinner {
+        border: 6px solid #fff3;
+        border-top: 6px solid #ffcc00;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg);}
+        100% { transform: rotate(360deg);}
+    }
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <button onclick="closeGame()">Close</button>
+<div id="topBar">
     <button onclick="toggleFullscreen()">Fullscreen</button>
+    <button onclick="closeGame()">Close</button>
     <button onclick="openNewTab()">Open in New Tab</button>
+    <button onclick="saveData()">Save Data</button>
+    <select id="loadSelect">
+        <option value="">-- Load Data --</option>
+    </select>
 </div>
 
-<iframe id="gameFrame" src=""></iframe>
+<iframe id="gameFrame"></iframe>
+
+<!-- Overlay -->
+<div id="overlay">
+    <div class="spinner"></div>
+    <div id="overlayText">Checking playerdata...</div>
+</div>
 
 <script>
+// Get game file from URL
 const params = new URLSearchParams(window.location.search);
-const file = params.get('file');
-const iframe = document.getElementById('gameFrame');
+const file = params.get('file') || 'about:blank';
+document.getElementById('gameFrame').src = file;
 
-if(file){
-    iframe.src = file;
-} else {
-    alert("No game file specified!");
-}
-
-function closeGame(){
-    window.location.href = 'index.html';
-}
-
+// Fullscreen toggle
 function toggleFullscreen(){
-    if(iframe.requestFullscreen){
+    const iframe = document.getElementById('gameFrame');
+    if(!document.fullscreenElement){
         iframe.requestFullscreen();
-    } else if(iframe.webkitRequestFullscreen){
-        iframe.webkitRequestFullscreen();
-    } else if(iframe.msRequestFullscreen){
-        iframe.msRequestFullscreen();
+    } else {
+        document.exitFullscreen();
     }
 }
 
+// Close game
+function closeGame(){
+    window.history.back();
+}
+
+// Open in new tab
 function openNewTab(){
-    if(file){
-        // Open actual HTML file in a new tab
-        window.open(file, '_blank');
-    }
+    window.open(file, '_blank');
+}
+
+// Save Data
+function saveData(){
+    let saved = JSON.parse(localStorage.getItem('playerData')) || [];
+    const name = prompt("Enter a name for this save:");
+    if(!name) return;
+
+    const newData = {
+        name: name,
+        file: file,
+        timestamp: new Date().toISOString()
+    };
+    saved.push(newData);
+    localStorage.setItem('playerData', JSON.stringify(saved));
+    updateDropdown();
+    alert("Data saved!");
+}
+
+// Load Data Dropdown
+const loadSelect = document.getElementById('loadSelect');
+function updateDropdown(){
+    loadSelect.innerHTML = '<option value="">-- Load Data --</option>';
+    const saved = JSON.parse(localStorage.getItem('playerData')) || [];
+    saved.forEach((d,i)=>{
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = d.name + ' (' + d.timestamp.split('T')[0] + ')';
+        loadSelect.appendChild(option);
+    });
+}
+updateDropdown();
+
+// Handle dropdown change
+loadSelect.addEventListener('change', ()=>{
+    const idx = loadSelect.value;
+    if(idx === "") return;
+    const saved = JSON.parse(localStorage.getItem('playerData')) || [];
+    const data = saved[idx];
+    showOverlay(data);
+});
+
+function showOverlay(data){
+    const overlay = document.getElementById('overlay');
+    const text = document.getElementById('overlayText');
+    overlay.style.display = 'flex';
+    text.textContent = 'Checking playerdata...';
+
+    // 10 seconds overlay
+    setTimeout(()=>{
+        text.textContent = 'Playerdata found! Now loading...';
+    }, 5000);
+
+    setTimeout(()=>{
+        overlay.style.display = 'none';
+        document.getElementById('gameFrame').src = data.file;
+        loadSelect.value = '';
+    }, 10000);
 }
 </script>
 
