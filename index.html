@@ -129,24 +129,63 @@ function openTab(tabId){
 }
 
 // Typewriter animation
-function typeWriter(element, texts, typingSpeed=200, eraseSpeed=100){
-    let i=0, j=0, forward=true;
-    setInterval(()=>{
+<header>
+  <h1 id="mainHeader"></h1>
+  <h2 id="subHeader"></h2>
+  <h3 id="subSubHeader">Site is official</h3>
+</header>
+
+<style>
+header { text-align:center; padding:30px; background:#2e2e4f; font-family: monospace; }
+header h1, header h2 {
+    display:inline-block;
+    white-space: pre; /* preserves spaces */
+    position: relative;
+}
+.cursor {
+    display: inline-block;
+    width: .15em;
+    background: orange;
+    margin-left: 2px;
+    animation: blink 0.7s step-start infinite;
+}
+@keyframes blink {
+    0%,50%,100% { opacity: 1; }
+    25%,75% { opacity: 0; }
+}
+header h3 { display:block; margin-top:10px; font-size:1.2rem; }
+</style>
+
+<script>
+function typeWriter(element, texts, speed=200){
+    let i=0, j=0;
+    let forward = true;
+
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    element.appendChild(cursor);
+
+    function type(){
+        let txt = texts[i];
         if(forward){
-            element.textContent = texts[i].substring(0,j+1);
+            element.textContent = txt.substring(0,j+1);
+            element.appendChild(cursor);
             j++;
-            if(j===texts[i].length){ forward=false; setTimeout(()=>{},1000); }
+            if(j === txt.length){ forward = false; setTimeout(type,1000); return; }
         } else {
-            element.textContent = texts[i].substring(0,j-1);
+            element.textContent = txt.substring(0,j-1);
+            element.appendChild(cursor);
             j--;
-            if(j===0){ forward=true; i=(i+1)%texts.length; }
+            if(j===0){ forward = true; i=(i+1)%texts.length; }
         }
-    }, forward?typingSpeed:eraseSpeed);
+        setTimeout(type, forward? speed : speed/2);
+    }
+    type();
 }
 
-// Start header animations
-typeWriter(document.getElementById('mainHeader'), ['ReallyUnb0ck3d'], 200, 100);
-typeWriter(document.getElementById('subHeader'), ['More games coming soon!'], 200, 100);
+// Initialize typewriter
+typeWriter(document.getElementById('mainHeader'), ['ReallyUnb0ck3d'], 200);
+typeWriter(document.getElementById('subHeader'), ['More games coming soon!'], 200);
 </script>
 
 </body>
