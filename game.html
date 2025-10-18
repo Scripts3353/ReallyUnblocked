@@ -38,11 +38,11 @@ if(file){
     alert("No game file specified!");
 }
 
-function closeGame() {
+function closeGame(){
     window.location.href = 'index.html';
 }
 
-function toggleFullscreen() {
+function toggleFullscreen(){
     if(iframe.requestFullscreen){
         iframe.requestFullscreen();
     } else if(iframe.webkitRequestFullscreen){
@@ -52,8 +52,9 @@ function toggleFullscreen() {
     }
 }
 
-function openNewTab() {
+function openNewTab(){
     if(file){
+        // Open actual HTML file in a new tab
         window.open(file, '_blank');
     }
 }
