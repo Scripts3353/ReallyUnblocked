@@ -7,8 +7,9 @@
 <style>
 body { margin:0; font-family: Arial,sans-serif; background:#1e1e2f; color:white; }
 header { background:#2e2e4f; padding:30px; text-align:center; overflow:hidden; }
-header h1, header h2 { display:inline-block; white-space: pre; font-family: monospace; }
-header h3 { font-size:1.2rem; margin-top:10px; display:block; }
+header { background:#2e2e4f; padding:30px; text-align:center; position:relative; overflow:hidden; }
+header h1 { margin:0; font-size:3rem; white-space:nowrap; border-right:.15em solid orange; overflow:hidden; display:inline-block; }
+header h2 { margin:10px 0 0; font-size:1.5rem; white-space:nowrap; border-right:.15em solid orange; display:inline-block; }
 
 .cursor { display:inline-block; width:.15em; background:orange; animation:blink 0.7s step-start infinite; margin-left:2px; }
 @keyframes blink { 0%,50%,100%{ opacity:1; } 25%,75%{ opacity:0; } }
@@ -106,34 +107,25 @@ function openTab(tabId){
     document.getElementById(tabId).classList.add('active');
 }
 
-// Typewriter with blinking cursor
-function typeWriter(element, texts, speed=200){
+// Typewriter animation
+function typeWriter(element, texts, delay=150, eraseDelay=50){
     let i=0, j=0, forward=true;
-    const cursor = document.createElement('span');
-    cursor.className = 'cursor';
-    element.appendChild(cursor);
-
-    function type(){
-        let txt = texts[i];
+    setInterval(()=>{
         if(forward){
-            element.textContent = txt.substring(0,j+1);
-            element.appendChild(cursor);
+            element.textContent = texts[i].substring(0,j+1);
             j++;
-            if(j === txt.length){ forward=false; setTimeout(type,1000); return; }
+            if(j===texts[i].length){ forward=false; setTimeout(()=>{},1000); }
         } else {
-            element.textContent = txt.substring(0,j-1);
-            element.appendChild(cursor);
+            element.textContent = texts[i].substring(0,j-1);
             j--;
             if(j===0){ forward=true; i=(i+1)%texts.length; }
         }
-        setTimeout(type, forward ? speed : speed/2);
-    }
-    type();
+    }, forward?delay:eraseDelay);
 }
 
-// Start typing animation
-typeWriter(document.getElementById('mainHeader'), ['ReallyUnb0ck3d'], 200);
-typeWriter(document.getElementById('subHeader'), ['More games coming soon!'], 200);
+// Start header animations
+typeWriter(document.getElementById('mainHeader'), ['ReallyUnb0ck3d']);
+typeWriter(document.getElementById('subHeader'), ['More games coming soon!', 'Site is official']);
 </script>
 
 </body>
