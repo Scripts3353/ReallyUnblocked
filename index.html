@@ -236,35 +236,49 @@ function openTab(tabId){
     document.getElementById(tabId).classList.add('active');
 }
 
-// Typewriter animation for second header
-function typeWriter(element, text, speed=200){
-    let i=0;
+// Rotating typewriter effect
+function rotatingTypewriter(element, phrases, typingSpeed=150, pause=1500) {
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
     const cursor = document.createElement('span');
-    cursor.className='cursor';
+    cursor.className = 'cursor';
     element.appendChild(cursor);
 
-    function type(){
-        if(i<=text.length){
-            element.textContent = text.substring(0,i);
+    function type() {
+        const currentPhrase = phrases[phraseIndex];
+        if (!deleting) {
+            element.textContent = currentPhrase.substring(0, charIndex + 1);
             element.appendChild(cursor);
-            i++;
-            setTimeout(type, speed);
+            charIndex++;
+            if (charIndex === currentPhrase.length) {
+                deleting = true;
+                setTimeout(type, pause);
+                return;
+            }
         } else {
-            setTimeout(()=>{
-                i=0;
-                type();
-            },2000);
+            element.textContent = currentPhrase.substring(0, charIndex - 1);
+            element.appendChild(cursor);
+            charIndex--;
+            if (charIndex === 0) {
+                deleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }
         }
+        setTimeout(type, typingSpeed);
     }
+
     type();
 }
-    
+
+// Example usage
 const header = document.getElementById('animatedHeader');
 rotatingTypewriter(header, [
     "More games coming soon!",
-    "Developed By Co-Founder Of SigmaBM",
-    "Fixed Data Not Saving"
+    "DEVELOPED BY CO-FOUNDER OF SIGMABM!",
+    "THIS SITE DOES SAVE DATA ZACH"
 ], 150, 1500);
+
 </script>
 
 </body>
