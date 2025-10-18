@@ -1,130 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReallyUnb0ck3d</title>
-    <style>
-        /* Reset some default styles */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: #1e1e2f;
-            color: #fff;
-        }
-
-        header {
-            background: #4b2e83;
-            padding: 20px;
-            text-align: center;
-            font-size: 2rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 15px 0;
-        }
-
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: #ffcc00;
-        }
-
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .game-card {
-            background: #2e2e4f;
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        .game-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-
-        .game-card h3 {
-            padding: 10px;
-            font-size: 1.1rem;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background: #4b2e83;
-            margin-top: 30px;
-        }
-
-        @media (max-width: 600px) {
-            header {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReallyUnb0ck3d</title>
+<style>
+    body { font-family: Arial, sans-serif; background:#1e1e2f; color:white; margin:0; padding:0; }
+    header { background:#4b2e83; padding:20px; text-align:center; font-size:2rem; font-weight:bold; }
+    .game-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; padding:20px; max-width:1200px; margin:0 auto; }
+    .game-card { background:#2e2e4f; border-radius:10px; cursor:pointer; overflow:hidden; text-align:center; transition:0.2s; }
+    .game-card:hover { transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.5); }
+    .game-card img { width:100%; height:150px; object-fit:cover; }
+    .game-card h3 { padding:10px; font-size:1.1rem; }
+    footer { text-align:center; padding:15px; background:#4b2e83; margin-top:30px; }
+</style>
 </head>
 <body>
-    <header>ReallyUnb0ck3d</header>
 
-    <nav>
-        <a href="#">Home</a>
-        <a href="#">All Games</a>
-        <a href="#">Top Games</a>
-        <a href="#">New</a>
-    </nav>
+<header>ReallyUnb0ck3d</header>
 
-    <main class="game-grid">
-        <div class="game-card" onclick="window.location.href='#'">
-            <img src="https://via.placeholder.com/200x150.png?text=Game+1" alt="Game 1">
-            <h3>Game 1</h3>
-        </div>
-        <div class="game-card" onclick="window.location.href='#'">
-            <img src="https://via.placeholder.com/200x150.png?text=Game+2" alt="Game 2">
-            <h3>Game 2</h3>
-        </div>
-        <div class="game-card" onclick="window.location.href='#'">
-            <img src="https://via.placeholder.com/200x150.png?text=Game+3" alt="Game 3">
-            <h3>Game 3</h3>
-        </div>
-        <div class="game-card" onclick="window.location.href='#'">
-            <img src="https://via.placeholder.com/200x150.png?text=Game+4" alt="Game 4">
-            <h3>Game 4</h3>
-        </div>
-        <!-- Add more game cards as needed -->
-    </main>
+<main class="game-grid">
+    <div class="game-card" onclick="openGame('games/game1.html')">
+        <img src="https://via.placeholder.com/200x150.png?text=Game+1" alt="Game 1">
+        <h3>Game 1</h3>
+    </div>
+    <div class="game-card" onclick="openGame('games/game2.html')">
+        <img src="https://via.placeholder.com/200x150.png?text=Game+2" alt="Game 2">
+        <h3>Game 2</h3>
+    </div>
+    <!-- Add more game cards here -->
+</main>
 
-    <footer>
-        &copy; 2025 ReallyUnb0ck3d. All rights reserved.
-    </footer>
+<footer>&copy; 2025 ReallyUnb0ck3d</footer>
+
+<script>
+function openGame(gameUrl) {
+    window.location.href = `game.html?file=${encodeURIComponent(gameUrl)}`;
+}
+</script>
+
 </body>
 </html>
