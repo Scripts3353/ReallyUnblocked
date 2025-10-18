@@ -6,9 +6,17 @@
 <title>ReallyUnb0ck3d</title>
 <style>
 body { margin:0; font-family: Arial,sans-serif; background:#1e1e2f; color:white; }
-header { background:#2e2e4f; padding:30px; text-align:center; position:relative; overflow:hidden; }
-header h1 { margin:0; font-size:3rem; white-space:nowrap; border-right:.15em solid orange; overflow:hidden; display:inline-block; }
-header h2 { margin:10px 0 0; font-size:1.5rem; white-space:nowrap; border-right:.15em solid orange; display:inline-block; }
+header { background:#2e2e4f; padding:30px; text-align:center; overflow:hidden; }
+header h1, header h2, header h3 {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    white-space: nowrap;
+    border-right: .15em solid orange;
+}
+header h1 { font-size:3rem; margin-bottom:10px; }
+header h2 { font-size:1.8rem; margin-bottom:5px; }
+header h3 { font-size:1.2rem; margin-bottom:15px; }
 
 nav { display:flex; justify-content:center; gap:20px; margin-top:20px; }
 nav button { background:#4b2e83; border:none; padding:10px 15px; color:white; font-weight:bold; cursor:pointer; border-radius:5px; transition:0.3s; }
@@ -24,10 +32,6 @@ nav button:hover { background:#ffcc00; color:#000; }
 .game-card:hover { transform: scale(1.05); }
 
 .credits { background:#2e2e4f; padding:20px; border-radius:10px; max-width:600px; margin:auto; text-align:center; }
-
-/* Typewriter animation keyframes */
-@keyframes typing { from { width: 0 } to { width: 100% } }
-@keyframes blink { 50% { border-color: transparent } }
 </style>
 </head>
 <body>
@@ -35,6 +39,7 @@ nav button:hover { background:#ffcc00; color:#000; }
 <header>
     <h1 id="mainHeader"></h1>
     <h2 id="subHeader"></h2>
+    <h3 id="subSubHeader"></h3>
     <nav>
         <button onclick="openTab('games')">Games</button>
         <button onclick="openTab('credits')">Credits</button>
@@ -48,42 +53,52 @@ nav button:hover { background:#ffcc00; color:#000; }
             <img src="https://th.bing.com/th/id/OIP.8qiNzyPViFpETptqypnL4AHaHa?w=180&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Dodge Miner">
             <h3>Dodge Miner</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/BasketBros.html')">
             <img src="https://tse4.mm.bing.net/th/id/OIP.N6l3XdKHPJ1gnnKIy_XulwHaFj?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Basket Bros">
             <h3>Basket Bros</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/1v1.LoL.html')">
             <img src="https://tse1.mm.bing.net/th/id/OIP.jv6iR5gwlta2uwmJ-zoJmgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="1v1.LoL">
             <h3>1v1.LoL</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/Basket Random.html')">
             <img src="https://th.bing.com/th/id/R.3279f70eec52d7b6c1a4e72021fe9b49?rik=U6kdaNpz86dnyw&pid=ImgRaw&r=0" alt="Basket Random">
             <h3>Basket Random</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/Boxing Random.html')">
             <img src="https://tse2.mm.bing.net/th/id/OIP.Rt480d2t4SEiajoVvPNxAwAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Boxing Random">
             <h3>Boxing Random</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/Death Run 3D.html')">
             <img src="https://play-lh.googleusercontent.com/dEu4Lrs5Ke5ZHDMedRkjjtYq1G22gGccxeIU_ZJNqqwLeSYshuUxBU0KCrSG7lEEwBo" alt="Death Run 3D">
             <h3>Death Run 3D</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/Escape Road.html')">
             <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/264.png" alt="Escape Road">
             <h3>Escape Road</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/Flip Master.html')">
             <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/392.png" alt="Flip Master">
             <h3>Flip Master</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/Ragdoll Archers.html')">
             <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/186.png" alt="Ragdoll Archers">
             <h3>Ragdoll Archers</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/Retro Bowl.html')">
             <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/33.png" alt="Retro Bowl">
             <h3>Retro Bowl</h3>
         </div>
+
         <div class="game-card" onclick="window.location.href='game.html?file=' + encodeURIComponent('games/Slope 2.html')">
             <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/368.png" alt="Slope 2">
             <h3>Slope 2</h3>
@@ -124,7 +139,8 @@ function typeWriter(element, texts, delay=150, eraseDelay=50){
 
 // Start header animations
 typeWriter(document.getElementById('mainHeader'), ['ReallyUnb0ck3d']);
-typeWriter(document.getElementById('subHeader'), ['More games coming soon!', 'Site is official']);
+typeWriter(document.getElementById('subHeader'), ['More games coming soon!']);
+typeWriter(document.getElementById('subSubHeader'), ['Site is official']);
 </script>
 
 </body>
