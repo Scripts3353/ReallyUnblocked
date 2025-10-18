@@ -5,14 +5,85 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ReallyUnb0ck3d</title>
 <style>
-body { margin:0; font-family: Arial, sans-serif; background:#1e1e2f; color:white; }
-header { background:#2e2e4f; padding:30px; text-align:center; }
+/* Full-screen splash */
+body, html {
+    margin:0;
+    height:100%;
+    font-family: Arial, sans-serif;
+    background:#1e1e2f;
+    color:white;
+}
 
+/* Splash screen */
+#splash {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: linear-gradient(135deg, #6a0dad, #000);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    z-index:1000;
+}
+
+#splash h1 {
+    font-family:"Comic Sans MS", cursive, sans-serif;
+    font-size:3rem;
+    margin-bottom:30px;
+    text-align:center;
+}
+
+#splash button {
+    padding:15px 30px;
+    margin:10px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+#guestBtn { background:#4b2e83; color:white; }
+#ownerBtn { background:#ffcc00; color:#000; }
+#guestBtn:hover { background:#ff99ff; color:#000; }
+#ownerBtn:hover { background:#fff; color:#000; }
+
+/* Password input */
+#ownerLogin {
+    margin-top:20px;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+}
+#ownerLogin input {
+    padding:10px;
+    font-size:1rem;
+    margin-bottom:10px;
+    border-radius:5px;
+    border:none;
+}
+#ownerLogin button {
+    padding:10px 20px;
+    font-size:1rem;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    background:#00ccff;
+    color:#000;
+}
+#ownerLogin button:hover { background:#0099cc; color:white; }
+
+/* Main site styles */
+header { background:#2e2e4f; padding:30px; text-align:center; }
 header h1, header h2, header h3 { font-family: "Comic Sans MS", cursive, sans-serif; margin:5px 0; }
 header h1 { font-size:3rem; }
 header h2 { font-size:1.8rem; display:inline-block; white-space: pre; }
 header h3 { font-size:1.2rem; margin-top:10px; }
-
 .cursor { display:inline-block; width:.15em; background:orange; animation:blink 0.7s step-start infinite; margin-left:2px; }
 @keyframes blink { 0%,50%,100%{ opacity:1; } 25%,75%{ opacity:0; } }
 
@@ -30,9 +101,26 @@ nav button:hover { background:#ffcc00; color:#000; }
 .game-card:hover { transform: scale(1.05); }
 
 .credits { background:#2e2e4f; padding:20px; border-radius:10px; max-width:600px; margin:auto; text-align:center; }
+
 </style>
 </head>
 <body>
+
+<!-- Splash Screen -->
+<div id="splash">
+    <h1>Welcome to ReallyUnb0ck3d</h1>
+    <div>
+        <button id="guestBtn">Continue as Guest</button>
+        <button id="ownerBtn">Owner Login</button>
+    </div>
+    <div id="ownerLogin">
+        <input type="password" id="ownerPassword" placeholder="Enter Password">
+        <button id="submitOwner">Login</button>
+    </div>
+</div>
+
+<!-- Main Site -->
+<div id="mainSite" style="display:none;">
 
 <header>
     <h1>ReallyUnb0ck3d</h1>
@@ -113,7 +201,35 @@ nav button:hover { background:#ffcc00; color:#000; }
     </div>
 </div>
 
+</div>
+
 <script>
+// Splash logic
+const splash = document.getElementById('splash');
+const mainSite = document.getElementById('mainSite');
+const guestBtn = document.getElementById('guestBtn');
+const ownerBtn = document.getElementById('ownerBtn');
+const ownerLogin = document.getElementById('ownerLogin');
+const submitOwner = document.getElementById('submitOwner');
+
+guestBtn.addEventListener('click', () => {
+    splash.style.display='none';
+    mainSite.style.display='block';
+});
+
+ownerBtn.addEventListener('click', () => {
+    ownerLogin.style.display='flex';
+});
+
+submitOwner.addEventListener('click', () => {
+    const password = document.getElementById('ownerPassword').value;
+    if(password === 'sigmabm') {
+        window.open('beta.html', '_blank'); // opens beta in new tab
+    } else {
+        alert('Incorrect password!');
+    }
+});
+
 // Tab switching
 function openTab(tabId){
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -134,7 +250,6 @@ function typeWriter(element, text, speed=200){
             i++;
             setTimeout(type, speed);
         } else {
-            // repeat after pause
             setTimeout(()=>{
                 i=0;
                 type();
@@ -143,8 +258,8 @@ function typeWriter(element, text, speed=200){
     }
     type();
 }
-
 typeWriter(document.getElementById('animatedHeader'), 'More games coming soon!', 200);
+
 </script>
 
 </body>
