@@ -79,6 +79,8 @@
 
     <button onclick="applySettings()">Apply Settings</button>
 
+    <button onclick="goHome()">Return to Home</button>
+
     <nav id="navbarPreview">
         <button>Games</button>
         <button>Credits</button>
@@ -111,6 +113,10 @@ function applySettings(){
         document.querySelector('header').style.background = "#4b2e83";
         document.querySelector('header').style.color = "#fff";
     }
+}
+
+function goHome(){
+    window.location.href = 'index.html';
 }
 </script>
 
