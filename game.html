@@ -3,201 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Viewer - ReallyUnb0ck3d</title>
+<title>Game</title>
 <style>
-    body, html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        font-family: Arial, sans-serif;
-        background: #1e1e2f;
-        color: white;
-    }
-
-    /* Top bar */
-    #topBar {
-        display: flex;
-        justify-content: flex-start;
-        gap: 10px;
-        padding: 10px;
-        background: #2e2e4f;
-        align-items: center;
-        position: fixed;
-        width: 100%;
-        z-index: 1000;
-    }
-
-    #topBar button, #topBar select {
-        padding: 8px 12px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        background: #4b2e83;
-        color: white;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-
-    #topBar button:hover, #topBar select:hover {
-        background: #ffcc00;
-        color: #000;
-    }
-
-    iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        margin-top: 50px; /* leave space for top bar */
-    }
-
-    /* Overlay */
-    #overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(75,0,130,0.95); /* purple */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        color: white;
-        font-size: 1.5rem;
-        z-index: 2000;
-        display: none; /* hidden by default */
-        text-align: center;
-    }
-
-    #overlay span {
-        margin-top: 20px;
-        font-size: 1rem;
-        color: #ffcc00;
-    }
-
-    /* Loading spinner */
-    .spinner {
-        border: 6px solid #fff3;
-        border-top: 6px solid #ffcc00;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg);}
-        100% { transform: rotate(360deg);}
-    }
+body, html { margin:0; padding:0; height:100%; background:#111; color:white; font-family:Arial,sans-serif; }
+#gameContainer { position:relative; width:100%; height:100%; }
+iframe { width:100%; height:100%; border:none; }
+#bar { position:absolute; top:0; left:0; width:100%; height:50px; background:#2e2e4f; display:flex; align-items:center; gap:10px; padding:0 10px; box-sizing:border-box; z-index:100; }
+#bar button { background:#4b2e83; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:5px; transition:0.3s; }
+#bar button:hover { background:#ffcc00; color:black; }
+#overlay { position:absolute; top:0; left:0; width:100%; height:100%; background:purple; display:flex; justify-content:center; align-items:center; flex-direction:column; color:white; font-size:2rem; display:none; z-index:200; }
 </style>
 </head>
 <body>
 
-<div id="topBar">
-    <button onclick="toggleFullscreen()">Fullscreen</button>
-    <button onclick="closeGame()">Close</button>
-    <button onclick="openNewTab()">Open in New Tab</button>
-    <button onclick="saveData()">Save Data</button>
-    <select id="loadSelect">
-        <option value="">-- Load Data --</option>
-    </select>
-</div>
-
-<iframe id="gameFrame"></iframe>
-
-<!-- Overlay -->
-<div id="overlay">
-    <div class="spinner"></div>
-    <div id="overlayText">Checking playerdata...</div>
+<div id="gameContainer">
+    <div id="bar">
+        <button onclick="closeGame()">Close</button>
+        <button onclick="fullscreenGame()">Fullscreen</button>
+        <button onclick="openNewTab()">Open in New Tab</button>
+        <button onclick="saveData()">Save Data</button>
+        <button onclick="loadData()">Load Data</button>
+        <select id="savedDataSelect"></select>
+    </div>
+    <iframe id="gameFrame" src=""></iframe>
+    <div id="overlay">
+        <div id="overlayText">Checking player data...</div>
+    </div>
 </div>
 
 <script>
-// Get game file from URL parameter or last visited game
+// Get game file from query
 const params = new URLSearchParams(window.location.search);
-let file = params.get('file') || localStorage.getItem('lastGameFile') || 'about:blank';
-document.getElementById('gameFrame').src = file;
+const gameFile = params.get('file') || '';
+const iframe = document.getElementById('gameFrame');
+iframe.src = gameFile;
 
-// Save the last visited game
-localStorage.setItem('lastGameFile', file);
+// Helpers
+function closeGame(){ window.location.href='index.html'; }
+function fullscreenGame(){ iframe.requestFullscreen(); }
+function openNewTab(){ window.open(gameFile,'_blank'); }
 
-// Top bar functions
-function toggleFullscreen(){
-    const iframe = document.getElementById('gameFrame');
-    if(!document.fullscreenElement){
-        iframe.requestFullscreen();
-    } else {
-        document.exitFullscreen();
+// LocalStorage helpers
+const gameKey = 'gameData_' + gameFile;
+
+function saveData(){
+    const data = prompt("Enter your data for this game:");
+    if(data){
+        let saved = JSON.parse(localStorage.getItem(gameKey) || "[]");
+        saved.push(data);
+        localStorage.setItem(gameKey, JSON.stringify(saved));
+        alert("Data saved!");
+        updateDropdown();
     }
 }
 
-function closeGame(){
-    window.history.back();
-}
-
-function openNewTab(){
-    window.open(file, '_blank');
-}
-
-// Save Data
-function saveData(){
-    let saved = JSON.parse(localStorage.getItem('playerData')) || [];
-    const name = prompt("Enter a name for this save:");
-    if(!name) return;
-
-    const newData = {
-        name: name,
-        file: file,
-        timestamp: new Date().toISOString()
-    };
-    saved.push(newData);
-    localStorage.setItem('playerData', JSON.stringify(saved));
-    updateDropdown();
-    alert("Data saved!");
-}
-
-// Load Data Dropdown
-const loadSelect = document.getElementById('loadSelect');
-function updateDropdown(){
-    loadSelect.innerHTML = '<option value="">-- Load Data --</option>';
-    const saved = JSON.parse(localStorage.getItem('playerData')) || [];
-    saved.forEach((d,i)=>{
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = d.name + ' (' + d.timestamp.split('T')[0] + ')';
-        loadSelect.appendChild(option);
-    });
-}
-updateDropdown();
-
-// Handle dropdown selection
-loadSelect.addEventListener('change', ()=>{
-    const idx = loadSelect.value;
-    if(idx === "") return;
-    const saved = JSON.parse(localStorage.getItem('playerData')) || [];
-    const data = saved[idx];
-    showOverlay(data);
-});
-
-// Show overlay animation
-function showOverlay(data){
+function loadData(){
+    const select = document.getElementById('savedDataSelect');
+    const value = select.value;
+    if(!value) return;
+    // Show overlay
     const overlay = document.getElementById('overlay');
-    const text = document.getElementById('overlayText');
+    const overlayText = document.getElementById('overlayText');
     overlay.style.display = 'flex';
-    text.textContent = 'Checking playerdata...';
-
-    // 5 seconds later
+    overlayText.textContent = 'Checking player data...';
     setTimeout(()=>{
-        text.textContent = 'Playerdata found! Now loading...';
-    }, 5000);
-
-    // 10 seconds later
-    setTimeout(()=>{
-        overlay.style.display = 'none';
-        file = data.file; // update current game
-        document.getElementById('gameFrame').src = file;
-        localStorage.setItem('lastGameFile', file); // save last visited game
-        loadSelect.value = '';
+        overlayText.textContent = 'Player data found! Now loading...';
+        setTimeout(()=>{
+            overlay.style.display = 'none';
+            alert('Data loaded: ' + value);
+            // Here you can actually load the data into the game if needed
+        }, 5000);
     }, 10000);
 }
+
+// Populate dropdown
+function updateDropdown(){
+    const select = document.getElementById('savedDataSelect');
+    select.innerHTML = '<option value="">Select saved data</option>';
+    const saved = JSON.parse(localStorage.getItem(gameKey) || "[]");
+    saved.forEach(item=>{
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        select.appendChild(opt);
+    });
+}
+
+// Initialize dropdown
+updateDropdown();
 </script>
 
 </body>
