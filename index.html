@@ -258,8 +258,13 @@ function typeWriter(element, text, speed=200){
     }
     type();
 }
-typeWriter(document.getElementById('animatedHeader'), 'More games coming soon!', 200);
-
+    
+const header = document.getElementById('animatedHeader');
+rotatingTypewriter(header, [
+    "More games coming soon!",
+    "Developed By Co-Founder Of SigmaBM",
+    "Fixed Data Not Saving"
+], 150, 1500);
 </script>
 
 </body>
