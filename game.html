@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play Game - ReallyUnb0ck3d</title>
+<style>
+    body { margin:0; background:#111; color:white; font-family:Arial,sans-serif; }
+    .top-bar {
+        display:flex; justify-content:flex-end; background:#4b2e83; padding:10px; gap:10px;
+    }
+    .top-bar button {
+        background:#2e2e4f; border:none; color:white; padding:8px 12px; cursor:pointer; border-radius:5px;
+        transition:0.2s;
+    }
+    .top-bar button:hover { background:#ffcc00; color:#000; }
+    iframe { width:100%; height:calc(100vh - 50px); border:none; display:block; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+    <button onclick="closeGame()">Close</button>
+    <button onclick="toggleFullscreen()">Fullscreen</button>
+    <button onclick="openNewTab()">Open in New Tab</button>
+</div>
+
+<iframe id="gameFrame" src=""></iframe>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const file = params.get('file');
+const iframe = document.getElementById('gameFrame');
+
+if(file){
+    iframe.src = file;
+} else {
+    alert("No game file specified!");
+}
+
+function closeGame() {
+    window.location.href = 'index.html';
+}
+
+function toggleFullscreen() {
+    if(iframe.requestFullscreen){
+        iframe.requestFullscreen();
+    } else if(iframe.webkitRequestFullscreen){
+        iframe.webkitRequestFullscreen();
+    } else if(iframe.msRequestFullscreen){
+        iframe.msRequestFullscreen();
+    }
+}
+
+function openNewTab() {
+    if(file){
+        window.open(file, '_blank');
+    }
+}
+</script>
+
+</body>
+</html>
