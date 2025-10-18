@@ -111,12 +111,15 @@
 </div>
 
 <script>
-// Get game file from URL
+// Get game file from URL parameter or last visited game
 const params = new URLSearchParams(window.location.search);
-const file = params.get('file') || 'about:blank';
+let file = params.get('file') || localStorage.getItem('lastGameFile') || 'about:blank';
 document.getElementById('gameFrame').src = file;
 
-// Fullscreen toggle
+// Save the last visited game
+localStorage.setItem('lastGameFile', file);
+
+// Top bar functions
 function toggleFullscreen(){
     const iframe = document.getElementById('gameFrame');
     if(!document.fullscreenElement){
@@ -126,12 +129,10 @@ function toggleFullscreen(){
     }
 }
 
-// Close game
 function closeGame(){
     window.history.back();
 }
 
-// Open in new tab
 function openNewTab(){
     window.open(file, '_blank');
 }
@@ -167,7 +168,7 @@ function updateDropdown(){
 }
 updateDropdown();
 
-// Handle dropdown change
+// Handle dropdown selection
 loadSelect.addEventListener('change', ()=>{
     const idx = loadSelect.value;
     if(idx === "") return;
@@ -176,20 +177,24 @@ loadSelect.addEventListener('change', ()=>{
     showOverlay(data);
 });
 
+// Show overlay animation
 function showOverlay(data){
     const overlay = document.getElementById('overlay');
     const text = document.getElementById('overlayText');
     overlay.style.display = 'flex';
     text.textContent = 'Checking playerdata...';
 
-    // 10 seconds overlay
+    // 5 seconds later
     setTimeout(()=>{
         text.textContent = 'Playerdata found! Now loading...';
     }, 5000);
 
+    // 10 seconds later
     setTimeout(()=>{
         overlay.style.display = 'none';
-        document.getElementById('gameFrame').src = data.file;
+        file = data.file; // update current game
+        document.getElementById('gameFrame').src = file;
+        localStorage.setItem('lastGameFile', file); // save last visited game
         loadSelect.value = '';
     }, 10000);
 }
