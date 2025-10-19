@@ -5,80 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ReallyUnb0ck3d</title>
 <style>
-/* Full-screen splash */
-body, html {
-    margin:0;
-    height:100%;
-    font-family: Arial, sans-serif;
-    background:#1e1e2f;
-    color:white;
-}
-
-/* Splash screen */
-#splash {
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: linear-gradient(135deg, #6a0dad, #000);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    z-index:1000;
-}
-
-#splash h1 {
-    font-family:"Comic Sans MS", cursive, sans-serif;
-    font-size:3rem;
-    margin-bottom:30px;
-    text-align:center;
-}
-
-#splash button {
-    padding:15px 30px;
-    margin:10px;
-    font-size:1.2rem;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
-    transition:0.3s;
-}
-
-#guestBtn { background:#4b2e83; color:white; }
-#ownerBtn { background:#ffcc00; color:#000; }
-#guestBtn:hover { background:#ff99ff; color:#000; }
-#ownerBtn:hover { background:#fff; color:#000; }
-
-/* Password input */
-#ownerLogin {
-    margin-top:20px;
-    display:none;
-    flex-direction:column;
-    align-items:center;
-}
-#ownerLogin input {
-    padding:10px;
-    font-size:1rem;
-    margin-bottom:10px;
-    border-radius:5px;
-    border:none;
-}
-#ownerLogin button {
-    padding:10px 20px;
-    font-size:1rem;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-    background:#00ccff;
-    color:#000;
-}
-#ownerLogin button:hover { background:#0099cc; color:white; }
-
-/* Main site styles */
+body { margin:0; font-family: Arial, sans-serif; background:#1e1e2f; color:white; }
 header { background:#2e2e4f; padding:30px; text-align:center; }
 header h1, header h2, header h3 { font-family: "Comic Sans MS", cursive, sans-serif; margin:5px 0; }
 header h1 { font-size:3rem; }
@@ -105,22 +32,6 @@ nav button:hover { background:#ffcc00; color:#000; }
 </head>
 <body>
 
-<!-- Splash Screen -->
-<div id="splash">
-    <h1>Welcome to ReallyUnb0ck3d</h1>
-    <div>
-        <button id="guestBtn">Continue as Guest</button>
-        <button id="ownerBtn">Owner Login</button>
-    </div>
-    <div id="ownerLogin">
-        <input type="password" id="ownerPassword" placeholder="Enter Password">
-        <button id="submitOwner">Login</button>
-    </div>
-</div>
-
-<!-- Main Site -->
-<div id="mainSite" style="display:none;">
-
 <header>
     <h1>ReallyUnb0ck3d</h1>
     <h2 id="animatedHeader"></h2>
@@ -134,117 +45,138 @@ nav button:hover { background:#ffcc00; color:#000; }
 <!-- Games Tab -->
 <div id="games" class="tab-content active">
     <div class="game-grid">
-
-        <!-- Existing + New Games -->
         <div class="game-card" onclick="window.location.href='game.html?file=games/1v1.LoL.html'">
-            <img src="https://tse1.mm.bing.net/th/id/OIP.jv6iR5gwlta2uwmJ-zoJmgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="1v1.LoL">
+            <img src="no-image" alt="1v1.LoL">
             <h3>1v1.LoL</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/2048 Merge Run.html'">
-            <img src="https://play-lh.googleusercontent.com/E7LwzPZ6e0b9aS6e8e_xPfT4C6t1RAEJ7NfVMMuNh1zK45HP02Z0nUJ9Wv_vg1Me9A" alt="2048 Merge Run">
+            <img src="no-image" alt="2048 Merge Run">
             <h3>2048 Merge Run</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Adventure Capatalist.html'">
-            <img src="https://cdn2.steamgriddb.com/file/sgdb-cdn/logo_thumb/3bca2f7db7f5e1c6c0dfd.png" alt="Adventure Capitalist">
-            <h3>Adventure Capitalist</h3>
+            <img src="no-image" alt="Adventure Capatalist">
+            <h3>Adventure Capatalist</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Baseball Bros.html'">
-            <img src="https://static.vecteezy.com/system/resources/previews/010/312/740/original/baseball-sport-logo-design-free-vector.jpg" alt="Baseball Bros">
+            <img src="no-image" alt="Baseball Bros">
             <h3>Baseball Bros</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Basket Random.html'">
-            <img src="https://th.bing.com/th/id/R.3279f70eec52d7b6c1a4e72021fe9b49?rik=U6kdaNpz86dnyw&pid=ImgRaw&r=0" alt="Basket Random">
+            <img src="no-image" alt="Basket Random">
             <h3>Basket Random</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/BasketBros.html'">
-            <img src="https://tse4.mm.bing.net/th/id/OIP.N6l3XdKHPJ1gnnKIy_XulwHaFj?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Basket Bros">
-            <h3>Basket Bros</h3>
+            <img src="no-image" alt="BasketBros">
+            <h3>BasketBros</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Boxing Random.html'">
-            <img src="https://tse2.mm.bing.net/th/id/OIP.Rt480d2t4SEiajoVvPNxAwAAAA?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Boxing Random">
+            <img src="no-image" alt="Boxing Random">
             <h3>Boxing Random</h3>
         </div>
-        <div class="game-card" onclick="window.location.href='game.html?file=games/Dadish.html'">
-            <img src="https://play-lh.googleusercontent.com/BLjzQSYFyLBZyznEcSos6wGoBErzT8x7KhwG9F5T8qjfxWsuD2pTo5iS4ItfFJ0waUg" alt="Dadish">
-            <h3>Dadish</h3>
-        </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Dadish 2.html'">
-            <img src="https://play-lh.googleusercontent.com/yzLxXomykZBZPYlqTftQlH2ylYQeFwXMgX1wZkP8M7rjTg3W2zEVDEJCB_VP74EGjQ" alt="Dadish 2">
+            <img src="no-image" alt="Dadish 2">
             <h3>Dadish 2</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Dadish 3.html'">
-            <img src="https://play-lh.googleusercontent.com/gJ8Q4EowA9x9aU3B2W1Dn7yVJk6k4lysa55eKfA6uGvM2H8qJGcPTFr6nJ8PYoG6XA" alt="Dadish 3">
+            <img src="no-image" alt="Dadish 3">
             <h3>Dadish 3</h3>
         </div>
+        <div class="game-card" onclick="window.location.href='game.html?file=games/Dadish.html'">
+            <img src="no-image" alt="Dadish">
+            <h3>Dadish</h3>
+        </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Daily Dadish.html'">
-            <img src="https://play-lh.googleusercontent.com/JU9LkZf1oV7_3fZkU1lUlP8bDh1Wg4CJr2UtsEkF2AfiL02bnRTQzXwM3lp6xMZztLg" alt="Daily Dadish">
+            <img src="no-image" alt="Daily Dadish">
             <h3>Daily Dadish</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Death Run 3D.html'">
-            <img src="https://play-lh.googleusercontent.com/dEu4Lrs5Ke5ZHDMedRkjjtYq1G22gGccxeIU_ZJNqqwLeSYshuUxBU0KCrSG7lEEwBo" alt="Death Run 3D">
+            <img src="no-image" alt="Death Run 3D">
             <h3>Death Run 3D</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Dig Deep.html'">
-            <img src="no-image.jpg" alt="Dig Deep">
+            <img src="no-image" alt="Dig Deep">
             <h3>Dig Deep</h3>
         </div>
+        <div class="game-card" onclick="window.location.href='game.html?file=games/DodgeMiner.html'">
+            <img src="no-image" alt="DodgeMiner">
+            <h3>DodgeMiner</h3>
+        </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Doge Miner.html'">
-            <img src="no-image.jpg" alt="Doge Miner">
+            <img src="no-image" alt="Doge Miner">
             <h3>Doge Miner</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Escape Road.html'">
-            <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/264.png" alt="Escape Road">
+            <img src="no-image" alt="Escape Road">
             <h3>Escape Road</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Flip Master.html'">
-            <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/392.png" alt="Flip Master">
+            <img src="no-image" alt="Flip Master">
             <h3>Flip Master</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Getting Over It with Bennett Foddy.html'">
-            <img src="no-image.jpg" alt="Getting Over It">
-            <h3>Getting Over It</h3>
+            <img src="no-image" alt="Getting Over It with Bennett Foddy">
+            <h3>Getting Over It with Bennett Foddy</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/MonkeyMart.html'">
-            <img src="https://play-lh.googleusercontent.com/kx8mOAMKHtEekMTRaz3ZT-D2Yx1n5FXjML6VgKbiqVgHBvARd5Ay7FS60eA1Pjge9Gk=w480-h960" alt="Monkey Mart">
-            <h3>Monkey Mart</h3>
+            <img src="no-image" alt="MonkeyMart">
+            <h3>MonkeyMart</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Pac-Man Superfast.html'">
-            <img src="no-image.jpg" alt="Pac-Man Superfast">
+            <img src="no-image" alt="Pac-Man Superfast">
             <h3>Pac-Man Superfast</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Ragdoll Archers.html'">
-            <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/186.png" alt="Ragdoll Archers">
+            <img src="no-image" alt="Ragdoll Archers">
             <h3>Ragdoll Archers</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Retro Bowl.html'">
-            <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/33.png" alt="Retro Bowl">
+            <img src="no-image" alt="Retro Bowl">
             <h3>Retro Bowl</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Slope 2.html'">
-            <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/368.png" alt="Slope 2">
+            <img src="no-image" alt="Slope 2">
             <h3>Slope 2</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/SolarSandbox.html'">
-            <img src="https://solarsmash.co/data/image/game/solar-sandbox/solar-sandbox.jpg" alt="Solar Sandbox">
-            <h3>Solar Sandbox</h3>
+            <img src="https://solarsmash.co/data/image/game/solar-sandbox/solar-sandbox.jpg" alt="SolarSandbox">
+            <h3>SolarSandbox</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Twerk Race 3D.html'">
-            <img src="no-image.jpg" alt="Twerk Race 3D">
+            <img src="no-image" alt="Twerk Race 3D">
             <h3>Twerk Race 3D</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/Wordle.html'">
-            <img src="no-image.jpg" alt="Wordle">
+            <img src="no-image" alt="Wordle">
             <h3>Wordle</h3>
         </div>
+        <div class="game-card" onclick="window.location.href='game.html?file=games/clbasketbros.html'">
+            <img src="no-image" alt="clbasketbros">
+            <h3>clbasketbros</h3>
+        </div>
+        <div class="game-card" onclick="window.location.href='game.html?file=games/clcoreball.html'">
+            <img src="no-image" alt="clcoreball">
+            <h3>clcoreball</h3>
+        </div>
+        <div class="game-card" onclick="window.location.href='game.html?file=games/clcrazycars.html'">
+            <img src="no-image" alt="clcrazycars">
+            <h3>clcrazycars</h3>
+        </div>
+        <div class="game-card" onclick="window.location.href='game.html?file=games/clsnowrider.html'">
+            <img src="no-image" alt="clsnowrider">
+            <h3>clsnowrider</h3>
+        </div>
+        <div class="game-card" onclick="window.location.href='game.html?file=games/cltrafficjam3d.html'">
+            <img src="no-image" alt="cltrafficjam3d">
+            <h3>cltrafficjam3d</h3>
+        </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/madden64.html'">
-            <img src="https://tse3.mm.bing.net/th/id/OIP.5zkP8SuHwTsaqw902v9MMgHaFI?w=264&h=182&c=7&r=0&o=7&pid=1.7&rm=3" alt="Madden 64">
-            <h3>Madden 64</h3>
+            <img src="no-image" alt="madden64">
+            <h3>madden64</h3>
         </div>
         <div class="game-card" onclick="window.location.href='game.html?file=games/shrek2.html'">
-            <img src="https://tse2.mm.bing.net/th/id/OIP.7QbssIaRBRko9p_g6GPaKQHaHa?w=166&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Shrek 2">
-            <h3>Shrek 2</h3>
+            <img src="no-image" alt="shrek2">
+            <h3>shrek2</h3>
         </div>
-
     </div>
 </div>
 
@@ -256,35 +188,7 @@ nav button:hover { background:#ffcc00; color:#000; }
     </div>
 </div>
 
-</div>
-
 <script>
-// Splash logic
-const splash = document.getElementById('splash');
-const mainSite = document.getElementById('mainSite');
-const guestBtn = document.getElementById('guestBtn');
-const ownerBtn = document.getElementById('ownerBtn');
-const ownerLogin = document.getElementById('ownerLogin');
-const submitOwner = document.getElementById('submitOwner');
-
-guestBtn.addEventListener('click', () => {
-    splash.style.display='none';
-    mainSite.style.display='block';
-});
-
-ownerBtn.addEventListener('click', () => {
-    ownerLogin.style.display='flex';
-});
-
-submitOwner.addEventListener('click', () => {
-    const password = document.getElementById('ownerPassword').value;
-    if(password === 'sigmabm') {
-        window.open('beta.html', '_blank');
-    } else {
-        alert('Incorrect password!');
-    }
-});
-
 // Tab switching
 function openTab(tabId){
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -309,4 +213,30 @@ function rotatingTypewriter(element, phrases, typingSpeed=150, pause=1500) {
             if (charIndex === currentPhrase.length) {
                 deleting = true;
                 setTimeout(type, pause);
-               
+                return;
+            }
+        } else {
+            element.textContent = currentPhrase.substring(0, charIndex - 1);
+            element.appendChild(cursor);
+            charIndex--;
+            if (charIndex === 0) {
+                deleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }
+        }
+        setTimeout(type, typingSpeed);
+    }
+
+    type();
+}
+
+const header = document.getElementById('animatedHeader');
+rotatingTypewriter(header, [
+    "More games coming soon!",
+    "DEVELOPED BY CO-FOUNDER OF SIGMABM!",
+    "THIS SITE DOES SAVE DATA ZACH"
+], 150, 1500);
+
+</script>
+</body>
+</html>
