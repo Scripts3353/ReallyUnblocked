@@ -181,6 +181,67 @@ nav button:hover { background:#ffcc00; color:#000; }
     </div>
 </div>
 
+<!-- Suggestions Tab -->
+<div id="suggestions" class="tab-content">
+  <h1>Suggestions</h1>
+  <div id="suggestionsContent">
+    <form id="suggestionForm">
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" required>
+      <label for="game">Game Suggestion:</label>
+      <input type="text" id="game" required>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="suggestionsList">
+      <h2>Recent Suggestions</h2>
+      <div>No suggestions yet!</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Tab switching
+function openTab(tabId){
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+}
+
+// Rotating typewriter effect
+function rotatingTypewriter(element, phrases, typingSpeed=150, pause=1500) {
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let deleting = false;
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    element.appendChild(cursor);
+
+    function type() {
+        const currentPhrase = phrases[phraseIndex];
+        if (!deleting) {
+            element.textContent = currentPhrase.substring(0, charIndex + 1);
+            element.appendChild(cursor);
+            charIndex++;
+            if (charIndex === currentPhrase.length) {
+                deleting = true;
+                setTimeout(type, pause);
+                return;
+            }
+        } else {
+            element.textContent = currentPhrase.substring(0, charIndex - 1);
+            element.appendChild(cursor);
+            charIndex--;
+            if (charIndex === 0) {
+                deleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }
+        }
+        setTimeout(type, typingSpeed);
+    }
+
+    type();
+}
+
+    
 <script>
 // Tab switching
 function openTab(tabId){
