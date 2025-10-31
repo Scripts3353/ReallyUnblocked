@@ -82,7 +82,7 @@ const tempAccountsList = [
     { username: "temp3", password: "qwe789" },
 ];
 
-// Generate "current hour index" to pick a temp account
+// Pick the temp account for the current hour
 function getCurrentTempAccount() {
     const hourIndex = new Date().getHours() % tempAccountsList.length;
     return tempAccountsList[hourIndex];
@@ -102,9 +102,12 @@ function login() {
     const errorMsg = document.getElementById("errorMsg");
     const temp = getCurrentTempAccount();
 
-    // Check against temp account
     if ((username === temp.username && password === temp.password)) {
+        // Set loggedIn flag
         localStorage.setItem("loggedIn", "true");
+        // Open about:blank in a new tab
+        window.open("about:blank", "_blank");
+        // Redirect main tab to site.html
         window.location.replace("site.html");
     } else {
         errorMsg.style.display = "block";
