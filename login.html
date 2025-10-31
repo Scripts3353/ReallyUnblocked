@@ -1,119 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Login | ReallyUnb0ck3d</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #4b0082, #2e004f);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-.container {
-  background: rgba(0, 0, 0, 0.4);
-  padding: 40px;
-  border-radius: 12px;
-  text-align: center;
-  width: 320px;
-  box-shadow: 0 0 20px rgba(255,255,255,0.2);
-}
-h1 { margin-bottom: 20px; }
-input {
-  width: 90%;
-  padding: 10px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 6px;
-  outline: none;
-}
-button {
-  background: #a020f0;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-button:hover {
-  background: #d06eff;
-}
-.temp-login {
-  margin-top: 25px;
-  font-size: 0.9rem;
-  background: rgba(255,255,255,0.1);
-  padding: 10px;
-  border-radius: 8px;
-}
+  :root { --p1:#4b0082; --p2:#2e004f; --accent:#9d4edd; }
+  body{
+    margin:0;font-family:Arial,Helvetica,sans-serif;
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--p1),var(--p2));
+    color:#fff;
+  }
+  .card{
+    width:340px;padding:28px;border-radius:12px;
+    background:rgba(0,0,0,0.35);box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    border:1px solid rgba(255,255,255,0.04);text-align:center;
+  }
+  h1{margin:0 0 8px}
+  p.subtitle{margin:0 0 18px;opacity:0.9;font-size:14px}
+  input{width:100%;padding:10px;border-radius:8px;border:none;margin:8px 0;background:rgba(255,255,255,0.04);color:#fff}
+  input:focus{outline:2px solid var(--accent)}
+  button{width:100%;padding:10px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--accent),#7b2cbf);color:#140018;font-weight:700;cursor:pointer}
+  .temp{margin-top:16px;background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;font-size:13px}
+  .warn{color:#ffd1e6;margin-top:8px;font-size:13px}
 </style>
 </head>
 <body>
+  <div class="card" role="main" aria-labelledby="lgTitle">
+    <h1 id="lgTitle">Sign in</h1>
+    <p class="subtitle">Login to access ReallyUnb0ck3d</p>
 
-<div class="container">
-  <h1>Login</h1>
-  <input type="email" id="email" placeholder="Email" required><br>
-  <input type="password" id="password" placeholder="Password" required><br>
-  <button onclick="login()">Sign In</button>
+    <input id="email" type="email" placeholder="Email" autocomplete="username" />
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+    <button id="btn">Sign in</button>
 
-  <div class="temp-login">
-    <h3>Temporary Login (changes hourly)</h3>
-    <p id="tempEmail">Loading...</p>
-    <p id="tempPass">Loading...</p>
+    <div class="temp" id="tempBox">
+      <div><strong>Temporary (hourly):</strong></div>
+      <div id="tempCreds">Loading...</div>
+      <div class="warn" id="countdown">expires in: --:--</div>
+    </div>
   </div>
-</div>
 
 <script>
-// Clear previous login so login page always shows first
-localStorage.removeItem("loggedIn");
+// --- ALWAYS show login page first (do not auto-skip) ---
+localStorage.removeItem('loggedIn'); // comment this out if you want login persistent
 
-// --- Temporary login generator ---
-function generateTempLogin() {
-  const hour = new Date().getUTCHours();
-  const email = `temp${hour}@unb0ck3d.com`;
-  const password = btoa(`hour-${hour}`).slice(0, 8);
-  document.getElementById("tempEmail").textContent = `Email: ${email}`;
-  document.getElementById("tempPass").textContent = `Password: ${password}`;
-  return { email, password };
+// Permanent accounts you control:
+const users = {
+  "admin@unb0ck3d.com": "supersecret",
+  "test@example.com": "12345"
+};
+
+// Hourly rotating temp account generator (deterministic per UTC hour)
+function getTempForHour(ts = Date.now()){
+  const hourIndex = Math.floor(ts / 3600000); // hours since epoch
+  // create deterministic pseudo-credentials from hourIndex
+  const email = `temp${hourIndex % 1000}@unb0ck3d.com`;
+  const password = btoa(String(hourIndex)).slice(0,10).replace(/=/g,'A'); // short safe string
+  return { email, password, hourIndex };
 }
 
-const temp = generateTempLogin();
+// Update display and countdown
+function updateTempUI(){
+  const now = Date.now();
+  const active = getTempForHour(now);
+  document.getElementById('tempCreds').textContent = `${active.email}  /  ${active.password}`;
+  const nextHour = (Math.floor(now / 3600000) + 1) * 3600000;
+  const msLeft = nextHour - now;
+  const minutes = Math.floor(msLeft / 60000);
+  const seconds = Math.floor((msLeft % 60000) / 1000);
+  document.getElementById('countdown').textContent = `expires in: ${minutes}:${String(seconds).padStart(2,'0')}`;
+}
+updateTempUI();
+setInterval(updateTempUI, 1000);
 
-// --- Permanent logins (you can add more) ---
-const validLogins = [
-  { email: "admin@unb0ck3d.com", password: "supersecret" },
-  temp
-];
+// Validate credentials: either permanent or the current temp
+function isValid(email, pass){
+  if (!email || !pass) return false;
+  if (users[email] && users[email] === pass) return true;
+  const active = getTempForHour();
+  return email === active.email && pass === active.password;
+}
 
-// --- Login function ---
-function login() {
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+// On login success: set flag and open site in about:blank + also navigate the current tab to site.html
+document.getElementById('btn').addEventListener('click', () => {
+  const email = document.getElementById('email').value.trim();
+  const pass = document.getElementById('password').value.trim();
+  if (isValid(email, pass)) {
+    try {
+      localStorage.setItem('loggedIn', 'true');
+    } catch(e){
+      console.warn('localStorage not available', e);
+    }
 
-  const match = validLogins.find(u => u.email === email && u.password === password);
-  
-  if (match) {
-    localStorage.setItem("loggedIn", "true");
-    // open index.html in about:blank
-    const newTab = window.open("about:blank", "_blank");
-    fetch("index.html")
-      .then(r => r.text())
-      .then(html => {
-        newTab.document.open();
-        newTab.document.write(html);
-        newTab.document.close();
-      });
+    // open about:blank and inject site.html into it
+    let win = null;
+    try {
+      win = window.open('about:blank', '_blank');
+    } catch(e){
+      // popup blocked; we'll still navigate this tab
+      win = null;
+    }
+
+    // fetch site.html and write it into the blank tab (best-effort)
+    fetch('site.html').then(r => r.text()).then(html => {
+      if (win) {
+        try {
+          win.document.open();
+          win.document.write(html);
+          win.document.close();
+        } catch(e){
+          // writing to new tab can fail in some browsers
+          console.error('write to blank failed', e);
+        }
+      }
+    }).catch(err => {
+      console.warn('could not fetch site.html (if testing via file:// this won't work).', err);
+    });
+
+    // Also navigate the current tab to site.html (so site loads if popup blocked)
+    window.location.replace('site.html');
   } else {
-    alert("Invalid email or password.");
+    alert('Invalid email or password.');
   }
-}
-</script>
+});
 
+// Enter key support
+document.addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('btn').click(); });
+</script>
 </body>
 </html>
