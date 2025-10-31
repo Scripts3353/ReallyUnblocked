@@ -7,7 +7,7 @@
 <style>
 body {
     font-family: Arial, sans-serif;
-    background: #1e1e2f;
+    background: linear-gradient(135deg, #6a0dad, #1e1e2f);
     color: white;
     display: flex;
     justify-content: center;
@@ -54,6 +54,11 @@ body {
     margin-top: 10px;
     display: none;
 }
+.temp-cred {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #ddd;
+}
 </style>
 </head>
 <body>
@@ -64,37 +69,55 @@ body {
     <input type="password" id="password" placeholder="Password" autocomplete="off">
     <button onclick="login()">Sign In</button>
     <div class="error-msg" id="errorMsg">Invalid username or password</div>
+    <div class="temp-cred" id="tempCreds">
+        Temp login: <span id="tempUser"></span> / <span id="tempPass"></span>
+    </div>
 </div>
 
 <script>
-// TEMP hardcoded credentials
-const tempAccounts = [
-    { username: "admin", password: "admin123" }, // you can add more
-    { username: "user", password: "password" }
+// TEMP credentials list
+const tempAccountsList = [
+    { username: "temp1", password: "abc123" },
+    { username: "temp2", password: "xyz456" },
+    { username: "temp3", password: "qwe789" },
 ];
 
+// Generate "current hour index" to pick a temp account
+function getCurrentTempAccount() {
+    const hourIndex = new Date().getHours() % tempAccountsList.length;
+    return tempAccountsList[hourIndex];
+}
+
+// Display temp credentials
+function showTempCreds() {
+    const temp = getCurrentTempAccount();
+    document.getElementById("tempUser").textContent = temp.username;
+    document.getElementById("tempPass").textContent = temp.password;
+}
+
+// Login check
 function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
     const errorMsg = document.getElementById("errorMsg");
+    const temp = getCurrentTempAccount();
 
-    const match = tempAccounts.find(acc => acc.username === username && acc.password === password);
-
-    if (match) {
-        // Successful login
+    // Check against temp account
+    if ((username === temp.username && password === temp.password)) {
         localStorage.setItem("loggedIn", "true");
-        // redirect to site.html
         window.location.replace("site.html");
     } else {
-        // Show error
         errorMsg.style.display = "block";
     }
 }
 
-// Optional: press Enter to login
+// Press Enter to login
 document.addEventListener("keydown", function(e) {
     if (e.key === "Enter") login();
 });
+
+// Show temp credentials on page load
+showTempCreds();
 </script>
 
 </body>
