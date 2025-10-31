@@ -69,9 +69,7 @@ body {
     <input type="password" id="password" placeholder="Password" autocomplete="off">
     <button onclick="login()">Sign In</button>
     <div class="error-msg" id="errorMsg">Invalid username or password</div>
-    <div class="temp-cred" id="tempCreds">
-        Temp login: <span id="tempUser"></span> / <span id="tempPass"></span>
-    </div>
+    <div class="temp-cred">Temp login: <span id="tempUser"></span> / <span id="tempPass"></span></div>
 </div>
 
 <script>
@@ -105,9 +103,7 @@ function login() {
     if ((username === temp.username && password === temp.password)) {
         // Set loggedIn flag
         localStorage.setItem("loggedIn", "true");
-        // Open about:blank in a new tab
-        window.open("about:blank", "_blank");
-        // Redirect main tab to site.html
+        // Redirect to your full site
         window.location.replace("site.html");
     } else {
         errorMsg.style.display = "block";
