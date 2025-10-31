@@ -22,57 +22,75 @@ button{width:100%;padding:10px;border-radius:8px;border:none;background:#9d4edd;
   <input id="username" placeholder="username or email" autocomplete="off">
   <input id="password" type="password" placeholder="password" autocomplete="off">
   <button id="loginBtn">Sign in</button>
+  <button id="genBtn">Generate One-Time Login</button>
   
-  <div class="small">One-time generated logins (single-use). Use the one-time credential below to login once.</div>
+  <div class="small">One-time generated logins (single-use). Use them to login once.</div>
   <div id="oneTimeList" class="list">Loading...</div>
 </div>
 
 <script>
 const oneTimeList = document.getElementById('oneTimeList');
 const loginBtn = document.getElementById('loginBtn');
+const genBtn = document.getElementById('genBtn');
 
-async function fetchOneTime() {
-    try {
+function renderList(data){
+    const items = data.oneTime.map(o=>{
+        const status = o.used ? '<span class="bad">USED</span>' : '<span class="good">ACTIVE</span>';
+        return `${o.username} / ${o.password} - ${status}`;
+    });
+    oneTimeList.innerHTML = items.join('<br>');
+}
+
+// Fetch one-time logins
+async function fetchList(){
+    try{
         const res = await fetch('/api/list');
-        if(!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
-        const items = data.oneTime.map(o => {
-            const status = o.used ? '<span class="bad">USED</span>' : '<span class="good">ACTIVE</span>';
-            return `${o.username} / ${o.password} - ${status}`;
-        });
-        oneTimeList.innerHTML = items.join('<br>');
-    } catch(e) {
+        renderList(data);
+    }catch(e){
         oneTimeList.innerHTML = 'Error loading one-time logins';
         console.error(e);
     }
 }
+fetchList();
 
-fetchOneTime();
-
+// Login
 loginBtn.addEventListener('click', async ()=>{
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
     if(!username||!password){ alert('Enter username & password'); return; }
 
-    try {
-        const res = await fetch('/api/login', {
+    try{
+        const res = await fetch('/api/login',{
             method:'POST',
             headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({username,password})
+            body:JSON.stringify({username,password})
         });
         const data = await res.json();
         if(data.ok){
-            localStorage.setItem('deviceId', data.deviceId);
-            localStorage.setItem('isAdmin', data.isAdmin? 'true':'false');
+            localStorage.setItem('deviceId',data.deviceId);
+            localStorage.setItem('isAdmin',data.isAdmin?'true':'false');
             window.open('about:blank','_blank');
-            window.location.href = '/site.html';
-        } else {
-            alert('Login failed: ' + (data.error||'Unknown error'));
-        }
-    } catch(e){
-        alert('Error connecting to server');
-        console.error(e);
-    }
+            window.location.href='/site.html';
+        } else alert('Login failed: ' + data.error);
+    }catch(e){ alert('Error connecting to server'); console.error(e);}
+});
+
+// Generate one-time login (admin only)
+genBtn.addEventListener('click', async ()=>{
+    const adminUser = prompt("Admin username:");
+    const adminPass = prompt("Admin password:");
+    if(!adminUser||!adminPass) return;
+    try{
+        const res = await fetch('/api/generate',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({adminUser,adminPass})
+        });
+        const data = await res.json();
+        if(data.username) alert(`New login: ${data.username} / ${data.password}`);
+        fetchList();
+    }catch(e){alert('Error generating login');console.error(e);}
 });
 </script>
 </body>
