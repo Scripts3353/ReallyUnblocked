@@ -1,85 +1,79 @@
-const express = require('express');
-const fs = require('fs');
-const crypto = require('crypto');
-const app = express();
-const PORT = process.env.PORT || 3000;
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Login - ReallyUnb0ck3d (Auto)</title>
+<style>
+:root{--p1:#6a0dad;--p2:#2e2e4f}
+body{margin:0;font-family:Arial;height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.card{width:380px;background:rgba(0,0,0,0.45);padding:22px;border-radius:12px}
+.small{font-size:13px;opacity:0.9;margin-top:8px}
+.cred{background:rgba(255,255,255,0.04);padding:8px;border-radius:8px;margin-top:12px;font-family:monospace}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h2>Welcome — creating your device login...</h2>
+    <div class="small">A device‑bound login will be created automatically and stored on this device only.</div>
 
-app.use(express.json());
-app.use(express.static('.')); // serve static files
+    <div id="status" class="small">Waiting...</div>
+    <div id="creds" class="cred" style="display:none;"></div>
+  </div>
 
-const LOGIN_FILE = './login.json';
+<script>
+async function autoCreateAndLogin(){
+  // if deviceId already exists, skip creation and validate with server
+  const existing = localStorage.getItem('deviceId');
+  if (existing) {
+    document.getElementById('status').innerText = 'Device already has credentials — validating...';
+    // validate
+    try {
+      const resp = await fetch('/api/validate', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ deviceId: existing })
+      });
+      const j = await resp.json();
+      if (j.ok && j.valid) {
+        document.getElementById('status').innerText = 'Validated — redirecting...';
+        // open blank tab and redirect
+        window.open('about:blank','_blank');
+        window.location.href = '/site.html';
+        return;
+      } else {
+        // invalid -> clear and create a fresh one
+        localStorage.removeItem('deviceId');
+      }
+    } catch(e){ console.error(e); /* fallthrough to create new */ }
+  }
 
-// Helper: read or create login.json
-function readLogins() {
-    if (!fs.existsSync(LOGIN_FILE)) {
-        fs.writeFileSync(LOGIN_FILE, JSON.stringify({users:[], oneTime:[]}, null, 2));
-    }
-    return JSON.parse(fs.readFileSync(LOGIN_FILE));
+  document.getElementById('status').innerText = 'Requesting server to create a device credential...';
+
+  try {
+    const res = await fetch('/api/auto_create', { method:'POST', headers:{'Content-Type':'application/json'} });
+    if (!res.ok) throw new Error('create failed');
+    const data = await res.json();
+    if (!data.ok) throw new Error('create returned error');
+
+    // store device id permanently in localStorage
+    localStorage.setItem('deviceId', data.deviceId);
+
+    // show credentials to user (for your records). They cannot use them on a different device because server bound them
+    document.getElementById('creds').style.display = 'block';
+    document.getElementById('creds').innerHTML = `<strong>username:</strong> ${data.username}<br><strong>password:</strong> ${data.password}<br><small style="opacity:0.85">This login is bound to this device only.</small>`;
+
+    document.getElementById('status').innerText = 'Created and bound to this device — redirecting...';
+
+    // open blank tab and redirect main tab to site
+    window.open('about:blank','_blank');
+    setTimeout(()=>{ window.location.href = '/site.html'; }, 700);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('status').innerText = 'Error creating device credential. Check server.';
+  }
 }
 
-function saveLogins(data) {
-    fs.writeFileSync(LOGIN_FILE, JSON.stringify(data, null, 2));
-}
-
-// Generate random string
-function randomStr(length=8){
-    return crypto.randomBytes(length).toString('hex');
-}
-
-// --- API Endpoints ---
-
-// List one-time logins
-app.get('/api/list', (req,res)=>{
-    const data = readLogins();
-    res.json(data);
-});
-
-// Generate one-time login (POST: admin only)
-app.post('/api/generate', (req,res)=>{
-    const {adminUser, adminPass} = req.body;
-    if(adminUser !== 'lukas' || adminPass !== 'lukas') return res.status(403).json({error:'Unauthorized'});
-    
-    const data = readLogins();
-    const username = 'user_' + randomStr(3);
-    const password = randomStr(4);
-    const id = randomStr(6);
-    
-    data.oneTime.push({username,password,id,used:false});
-    saveLogins(data);
-    res.json({username,password,id});
-});
-
-// Login endpoint
-app.post('/api/login', (req,res)=>{
-    const {username,password} = req.body;
-    const data = readLogins();
-
-    // Admin login
-    if(username === 'lukas' && password === 'lukas') {
-        return res.json({ok:true,isAdmin:true,deviceId:'ADMIN'});
-    }
-
-    // Check one-time logins
-    const user = data.oneTime.find(u=>u.username===username && u.password===password);
-    if(!user) return res.json({ok:false,error:'Invalid credentials'});
-    if(user.used) return res.json({ok:false,error:'Already used'});
-
-    // Mark used
-    user.used = true;
-    saveLogins(data);
-    res.json({ok:true,isAdmin:false,deviceId:user.id});
-});
-
-// Revoke or refresh ID (admin only)
-app.post('/api/revoke', (req,res)=>{
-    const {adminUser, adminPass, deviceId} = req.body;
-    if(adminUser !== 'lukas' || adminPass !== 'lukas') return res.status(403).json({error:'Unauthorized'});
-    const data = readLogins();
-    let user = data.oneTime.find(u=>u.id===deviceId);
-    if(!user) return res.json({error:'Device not found'});
-    user.used = true; // revoke
-    saveLogins(data);
-    res.json({ok:true});
-});
-
-app.listen(PORT, ()=>console.log(`Server running on port ${PORT}`));
+autoCreateAndLogin();
+</script>
+</body>
+</html>
