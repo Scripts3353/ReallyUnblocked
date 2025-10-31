@@ -5,110 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - ReallyUnb0ck3d</title>
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #6a0dad, #2e2e4f);
-    color: white;
-}
-.login-container {
-    background: rgba(30,30,47,0.9);
-    padding: 40px;
-    border-radius: 15px;
-    text-align: center;
-    width: 300px;
-}
-.login-container h1 {
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    margin-bottom: 20px;
-}
-.login-container input {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: none;
-}
-.login-container button {
-    padding: 10px 20px;
-    background: #8a2be2;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-}
-.login-container button:hover {
-    background: #ffcc00;
-    color: black;
-}
-.temp-login {
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #ffdd57;
-}
+:root{--p1:#4b0082;--p2:#240046}
+body{margin:0;font-family:Arial;height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--p1),var(--p2));color:#fff}
+.card{width:360px;background:rgba(0,0,0,0.45);padding:22px;border-radius:12px}
+input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;background:rgba(255,255,255,0.06);color:#fff}
+button{width:100%;padding:10px;border-radius:8px;border:none;background:#9d4edd;color:#fff;font-weight:700;cursor:pointer;margin-top:8px}
+.small{font-size:13px;opacity:0.9;margin-top:8px}
+.list{background:rgba(255,255,255,0.03);padding:8px;border-radius:8px;margin-top:8px;max-height:140px;overflow:auto;font-size:13px}
+.bad{color:#ff8b8b}
+.good{color:#b7ffb7}
 </style>
 </head>
 <body>
-<div class="login-container">
-    <h1>Sign In</h1>
-    <input type="text" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <div class="temp-login" id="tempLoginDisplay"></div>
+<div class="card">
+  <h2>ReallyUnb0ck3d — Login</h2>
+  <input id="username" placeholder="username or email" autocomplete="off">
+  <input id="password" type="password" placeholder="password" autocomplete="off">
+  <button id="loginBtn">Sign in</button>
+  
+  <div class="small">One-time generated logins (single-use). Use the one-time credential below to login once.</div>
+  <div id="oneTimeList" class="list">Loading...</div>
 </div>
 
 <script>
-// TEMPORARY CREDENTIALS ROTATE HOURLY
-const tempLogins = [
-    { email: "temp1@example.com", password: "pass1" },
-    { email: "temp2@example.com", password: "pass2" },
-    { email: "temp3@example.com", password: "pass3" },
-    { email: "lukas", password: "lukas" } // admin example
-];
+const oneTimeList = document.getElementById('oneTimeList');
+const loginBtn = document.getElementById('loginBtn');
 
-// Get current temp login based on the hour
-function getCurrentTempLogin() {
-    const hour = new Date().getHours();
-    return tempLogins[hour % tempLogins.length];
-}
-
-function displayTempLogin() {
-    const temp = getCurrentTempLogin();
-    document.getElementById('tempLoginDisplay').innerText = 
-        `Use temporary login: ${temp.email} / ${temp.password}`;
-}
-
-// Show current temp login immediately
-displayTempLogin();
-
-// Refresh temp login every hour
-setInterval(displayTempLogin, 60*60*1000);
-
-function login() {
-    const emailInput = document.getElementById('email').value.trim();
-    const passInput = document.getElementById('password').value.trim();
-    const temp = getCurrentTempLogin();
-
-    // Check against temp login or admin
-    if ((emailInput === temp.email && passInput === temp.password) ||
-        (emailInput === "lukas" && passInput === "lukas")) {
-        
-        // Store login info
-        localStorage.setItem("loggedIn", "true");
-        localStorage.setItem("deviceID", 'dev-'+Math.random().toString(36).substring(2,10));
-        if(emailInput === "lukas") localStorage.setItem("isAdmin", "true");
-        
-        // Redirect to site.html
-        window.location.href = "site.html";
-    } else {
-        alert("Incorrect login!");
+async function fetchOneTime() {
+    try {
+        const res = await fetch('/api/list');
+        if(!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        const items = data.oneTime.map(o => {
+            const status = o.used ? '<span class="bad">USED</span>' : '<span class="good">ACTIVE</span>';
+            return `${o.username} / ${o.password} - ${status}`;
+        });
+        oneTimeList.innerHTML = items.join('<br>');
+    } catch(e) {
+        oneTimeList.innerHTML = 'Error loading one-time logins';
+        console.error(e);
     }
 }
+
+fetchOneTime();
+
+loginBtn.addEventListener('click', async ()=>{
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    if(!username||!password){ alert('Enter username & password'); return; }
+
+    try {
+        const res = await fetch('/api/login', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({username,password})
+        });
+        const data = await res.json();
+        if(data.ok){
+            localStorage.setItem('deviceId', data.deviceId);
+            localStorage.setItem('isAdmin', data.isAdmin? 'true':'false');
+            window.open('about:blank','_blank');
+            window.location.href = '/site.html';
+        } else {
+            alert('Login failed: ' + (data.error||'Unknown error'));
+        }
+    } catch(e){
+        alert('Error connecting to server');
+        console.error(e);
+    }
+});
 </script>
 </body>
 </html>
