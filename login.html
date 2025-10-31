@@ -5,68 +5,109 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - ReallyUnb0ck3d</title>
 <style>
-  body {
-    margin:0; font-family: Arial, sans-serif;
-    height:100vh; display:flex; justify-content:center; align-items:center;
-    background: linear-gradient(135deg, #6b00b6, #3a0073);
-    color:white;
-  }
-  .login-container {
-    background: rgba(0,0,0,0.5);
-    padding:30px; border-radius:10px; width:320px; text-align:center;
-  }
-  input { width:90%; margin:10px 0; padding:10px; border-radius:5px; border:none; }
-  button { width:95%; padding:10px; margin-top:10px; border:none; border-radius:5px; background:#4b2e83; color:white; font-weight:bold; cursor:pointer; }
-  button:hover { background:#7b3fff; }
-  .temp-login { font-size:0.9rem; margin-top:15px; }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #6a0dad, #2e2e4f);
+    color: white;
+}
+.login-container {
+    background: rgba(30,30,47,0.9);
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    width: 300px;
+}
+.login-container h1 {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    margin-bottom: 20px;
+}
+.login-container input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+}
+.login-container button {
+    padding: 10px 20px;
+    background: #8a2be2;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+.login-container button:hover {
+    background: #ffcc00;
+    color: black;
+}
+.temp-login {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #ffdd57;
+}
 </style>
 </head>
 <body>
 <div class="login-container">
-  <h2>Sign In</h2>
-  <input type="email" id="email" placeholder="Email" required>
-  <input type="password" id="password" placeholder="Password" required>
-  <button onclick="login()">Sign In</button>
-  <div class="temp-login" id="tempLogin"></div>
-  <div id="errorMsg" style="color:red; margin-top:10px;"></div>
+    <h1>Sign In</h1>
+    <input type="text" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <div class="temp-login" id="tempLoginDisplay"></div>
 </div>
 
 <script>
-let tempUsers = [
-  {email:"temp1@example.com", password:"1234"},
-  {email:"temp2@example.com", password:"abcd"}
+// TEMPORARY CREDENTIALS ROTATE HOURLY
+const tempLogins = [
+    { email: "temp1@example.com", password: "pass1" },
+    { email: "temp2@example.com", password: "pass2" },
+    { email: "temp3@example.com", password: "pass3" },
+    { email: "lukas", password: "lukas" } // admin example
 ];
 
-// Rotate temp creds every hour
-function getCurrentTemp() {
-  const hour = new Date().getHours();
-  return tempUsers[hour % tempUsers.length];
+// Get current temp login based on the hour
+function getCurrentTempLogin() {
+    const hour = new Date().getHours();
+    return tempLogins[hour % tempLogins.length];
 }
-function updateTempDisplay() {
-  const temp = getCurrentTemp();
-  document.getElementById('tempLogin').innerText = `Temp login: ${temp.email} / ${temp.password}`;
-}
-updateTempDisplay();
-setInterval(updateTempDisplay, 60*60*1000);
 
-function generateDeviceID() {
-  return 'dev-' + Math.random().toString(36).substring(2,10);
+function displayTempLogin() {
+    const temp = getCurrentTempLogin();
+    document.getElementById('tempLoginDisplay').innerText = 
+        `Use temporary login: ${temp.email} / ${temp.password}`;
 }
+
+// Show current temp login immediately
+displayTempLogin();
+
+// Refresh temp login every hour
+setInterval(displayTempLogin, 60*60*1000);
 
 function login() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+    const emailInput = document.getElementById('email').value.trim();
+    const passInput = document.getElementById('password').value.trim();
+    const temp = getCurrentTempLogin();
 
-  const temp = getCurrentTemp();
-  if ((email === temp.email && password === temp.password) || (email==="lukas" && password==="lukas")) {
-    // Save device ID locally
-    if (!localStorage.getItem('deviceID')) localStorage.setItem('deviceID', generateDeviceID());
-    localStorage.setItem('loggedIn','true');
-    localStorage.setItem('isAdmin', email==="lukas"? "true" : "false");
-    window.location.href = "/";
-  } else {
-    document.getElementById('errorMsg').innerText = "Incorrect credentials!";
-  }
+    // Check against temp login or admin
+    if ((emailInput === temp.email && passInput === temp.password) ||
+        (emailInput === "lukas" && passInput === "lukas")) {
+        
+        // Store login info
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("deviceID", 'dev-'+Math.random().toString(36).substring(2,10));
+        if(emailInput === "lukas") localStorage.setItem("isAdmin", "true");
+        
+        // Redirect to site.html
+        window.location.href = "site.html";
+    } else {
+        alert("Incorrect login!");
+    }
 }
 </script>
 </body>
