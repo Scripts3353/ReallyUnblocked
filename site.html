@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ReallyUnb0ck3d</title>
 
-<!-- PROTECT: if not logged in, go to login -->
 <script>
-  if (localStorage.getItem("loggedIn") !== "true") {
-    // replace so back button won't skip login
+// Redirect to login page if not logged in
+if (localStorage.getItem("loggedIn") !== "true") {
     window.location.replace("login.html");
-  }
+}
 </script>
+
 
 <style>
 /* --- visual styles --- */
