@@ -31,7 +31,14 @@ nav button:hover { background:#ffcc00; color:#000; }
 </style>
 </head>
 <body>
+    
+<script>
+  if (localStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "login.html";
+  }
+</script>
 
+    
 <header>
     <h1>ReallyUnb0ck3d</h1>
     <h2 id="animatedHeader"></h2>
