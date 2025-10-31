@@ -5,119 +5,69 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - ReallyUnb0ck3d</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #6a0dad, #1e1e2f);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-.login-container {
-    background: #2e2e4f;
-    padding: 30px;
-    border-radius: 10px;
-    width: 300px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-}
-.login-container h1 {
-    margin-bottom: 20px;
-    font-size: 24px;
-}
-.login-container input {
-    width: 90%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: none;
-}
-.login-container button {
-    padding: 10px 20px;
-    margin-top: 10px;
-    border-radius: 5px;
-    border: none;
-    background: #9d4edd;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.login-container button:hover {
-    background: #ffcc00;
-    color: black;
-}
-.error-msg {
-    color: #ff5555;
-    margin-top: 10px;
-    display: none;
-}
-.temp-cred {
-    margin-top: 20px;
-    font-size: 0.9rem;
-    color: #ddd;
-}
+  body {
+    margin:0; font-family: Arial, sans-serif;
+    height:100vh; display:flex; justify-content:center; align-items:center;
+    background: linear-gradient(135deg, #6b00b6, #3a0073);
+    color:white;
+  }
+  .login-container {
+    background: rgba(0,0,0,0.5);
+    padding:30px; border-radius:10px; width:320px; text-align:center;
+  }
+  input { width:90%; margin:10px 0; padding:10px; border-radius:5px; border:none; }
+  button { width:95%; padding:10px; margin-top:10px; border:none; border-radius:5px; background:#4b2e83; color:white; font-weight:bold; cursor:pointer; }
+  button:hover { background:#7b3fff; }
+  .temp-login { font-size:0.9rem; margin-top:15px; }
 </style>
 </head>
 <body>
-
 <div class="login-container">
-    <h1>Login</h1>
-    <input type="text" id="username" placeholder="Username" autocomplete="off">
-    <input type="password" id="password" placeholder="Password" autocomplete="off">
-    <button onclick="login()">Sign In</button>
-    <div class="error-msg" id="errorMsg">Invalid username or password</div>
-    <div class="temp-cred">Temp login: <span id="tempUser"></span> / <span id="tempPass"></span></div>
+  <h2>Sign In</h2>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <button onclick="login()">Sign In</button>
+  <div class="temp-login" id="tempLogin"></div>
+  <div id="errorMsg" style="color:red; margin-top:10px;"></div>
 </div>
 
 <script>
-// TEMP credentials list
-const tempAccountsList = [
-    { username: "temp1", password: "abc123" },
-    { username: "temp2", password: "xyz456" },
-    { username: "temp3", password: "qwe789" },
+let tempUsers = [
+  {email:"temp1@example.com", password:"1234"},
+  {email:"temp2@example.com", password:"abcd"}
 ];
 
-// Pick the temp account for the current hour
-function getCurrentTempAccount() {
-    const hourIndex = new Date().getHours() % tempAccountsList.length;
-    return tempAccountsList[hourIndex];
+// Rotate temp creds every hour
+function getCurrentTemp() {
+  const hour = new Date().getHours();
+  return tempUsers[hour % tempUsers.length];
+}
+function updateTempDisplay() {
+  const temp = getCurrentTemp();
+  document.getElementById('tempLogin').innerText = `Temp login: ${temp.email} / ${temp.password}`;
+}
+updateTempDisplay();
+setInterval(updateTempDisplay, 60*60*1000);
+
+function generateDeviceID() {
+  return 'dev-' + Math.random().toString(36).substring(2,10);
 }
 
-// Display temp credentials
-function showTempCreds() {
-    const temp = getCurrentTempAccount();
-    document.getElementById("tempUser").textContent = temp.username;
-    document.getElementById("tempPass").textContent = temp.password;
-}
-
-// Login check
 function login() {
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const errorMsg = document.getElementById("errorMsg");
-    const temp = getCurrentTempAccount();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
 
-    if ((username === temp.username && password === temp.password)) {
-        // Set loggedIn flag
-        localStorage.setItem("loggedIn", "true");
-        // Redirect to your full site
-        window.location.replace("site.html");
-    } else {
-        errorMsg.style.display = "block";
-    }
+  const temp = getCurrentTemp();
+  if ((email === temp.email && password === temp.password) || (email==="lukas" && password==="lukas")) {
+    // Save device ID locally
+    if (!localStorage.getItem('deviceID')) localStorage.setItem('deviceID', generateDeviceID());
+    localStorage.setItem('loggedIn','true');
+    localStorage.setItem('isAdmin', email==="lukas"? "true" : "false");
+    window.location.href = "/";
+  } else {
+    document.getElementById('errorMsg').innerText = "Incorrect credentials!";
+  }
 }
-
-// Press Enter to login
-document.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") login();
-});
-
-// Show temp credentials on page load
-showTempCreds();
 </script>
-
 </body>
 </html>
