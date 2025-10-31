@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ReallyUnb0ck3d</title>
+<script>
+  // Redirect if not logged in
+  if (localStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "login.html";
+  }
+</script>
 <style>
 body { margin:0; font-family: Arial, sans-serif; background:#1e1e2f; color:white; }
 header { background:#2e2e4f; padding:30px; text-align:center; }
@@ -32,18 +38,11 @@ nav button:hover { background:#ffcc00; color:#000; }
 </head>
 <body>
     
-<script>
-  if (localStorage.getItem("loggedIn") !== "true") {
-    window.location.href = "login.html";
-  }
-</script>
-
-
     
 <header>
     <h1>ReallyUnb0ck3d</h1>
     <h2 id="animatedHeader"></h2>
-    <h3>Site url changed and one of the headers broke</h3>
+    <h3>freaky</h3>
     <nav>
         <button onclick="openTab('games')">Games</button>
         <button onclick="openTab('credits')">Credits</button>
